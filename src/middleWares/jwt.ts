@@ -1,37 +1,40 @@
-import jsonwebtoken from 'jsonwebtoken'
-import fs from 'fs'
-import { NextFunction, Request, Response } from 'express'
+import jsonwebtoken from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import { privateKey, publicKey } from "@config/keys";
 
-export const sign = (data: any) => {
-  return (
-    jsonwebtoken.sign(data, "", {
-      issuer: "",
-      subject: "",
-      expiresIn: "7d",
-      algorithm: "RS256"
-    })
-  )
-}
+export const jwtSign = (data: any) => {
+  return jsonwebtoken.sign(data, privateKey, {
+    issuer: process.env.jwt_issure,
+    subject: process.env.jwt_subject,
+    expiresIn: "30d",
+    algorithm: "RS256",
+  });
+};
 
-export const verify = (req: Request, res: Response, next: NextFunction) => {
+export const jwtVerify = (req: Request, res: Response, next: NextFunction) => {
   if (!req.cookies.token) {
-    res.status(401).send({ error: "user crendential invalid", result: null })
-    return
+    res.status(401).send({ error: "user crendential invalid", result: null });
+    return;
   }
-  jsonwebtoken.verify(req.cookies.token, "", {
-    issuer: "",
-    subject: "",
-    algorithms: ["RS256"]
-  }, (error, decoded) => {
-    if (error) {
-      res.status(401).send({ error: error, result: null })
-    } else {
-      req.body.jwt = {
-        error: null,
-        decoded: decoded
+  jsonwebtoken.verify(
+    req.cookies.token,
+    publicKey,
+    {
+      issuer: process.env.jwt_issure,
+      subject: process.env.jwt_subject,
+      algorithms: ["RS256"],
+    },
+    (error, decoded) => {
+      if (error) {
+        res.status(401).send({ error: error, result: null });
+      } else {
+        req.body.jwt = {
+          error: null,
+          decoded: decoded,
+        };
+        next();
       }
-      next()
+      return;
     }
-    return
-  })
-}
+  );
+};

@@ -1,35 +1,37 @@
-import express, { Request, Response } from 'express'
-import bodyParser from 'body-parser'
-import cookiePraser from 'cookie-parser'
-import cors, { CorsOptions } from 'cors'
-import MongoDbClient from '@db/MongoDbClient'
-import { MongoError } from 'mongodb'
-import "@config/logger"
+import express, { Request, Response } from "express";
+import cookiePraser from "cookie-parser";
+import cors, { CorsOptions } from "cors";
+import MongoDbClient from "@db/MongoDbClient";
+import { Db, MongoError } from "mongodb";
+import "@config/logger";
+import QuestionsRoute from "@routes/QuestionsRoute";
 
-const app = express()
-const port = 8000
+const app = express();
+const port = 8000;
 
-MongoDbClient.connect(() => {
-
-}, (err: MongoError) => {
-  
-})
+MongoDbClient.connect(
+  (db: Db) => {},
+  (err: MongoError) => {}
+);
 
 const corsOptions: CorsOptions = {
   origin: [],
   optionsSuccessStatus: 200,
-  credentials: true
-}
+  credentials: true,
+};
 
-app.use(cors(corsOptions))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookiePraser())
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookiePraser());
 
-app.use('/', (req: Request, res: Response) => {
+app.use("/questions", QuestionsRoute);
+
+app.use("/", (req: Request, res: Response) => {
   res.status(200).json({
-    user: 'hello',
-    bb: 'bb'
-  })
-})
-app.listen(port)
+    code: 400,
+    message: "route not found",
+  });
+});
+
+app.listen(port);

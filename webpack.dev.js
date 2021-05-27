@@ -51,7 +51,7 @@ module.exports = () => {
       filename: "index.js",
     },
     optimization: {
-      moduleIds: "hashed",
+      moduleIds: "deterministic",
     },
   };
 };
