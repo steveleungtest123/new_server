@@ -52,6 +52,9 @@ module.exports = () => {
     },
     optimization: {
       moduleIds: "deterministic",
+      splitChunks: {
+        chunks: "all",
+      },
     },
   };
 };

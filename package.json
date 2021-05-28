@@ -10,7 +10,7 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "nodemon build/index.js --watch build",
     "prod": "nodemon dist/index.js --watch dist",
-    "build:doc": " rimraf static/apidoc && apidoc -f '.*\\.ts$' -e '(node_modules)' -o static/apidoc",
+    "build:doc": " rimraf static/apidoc && apidoc -f '.*\\.ts$' -e '(node_modules)' -o apidoc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

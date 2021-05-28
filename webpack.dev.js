@@ -42,7 +42,7 @@ module.exports = () => {
         "@db": path.resolve(__dirname, "src/db/"),
         "@helpers": path.resolve(__dirname, "src/helpers/"),
         "@middleWares": path.resolve(__dirname, "src/middleWares/"),
-        "@routes": path.resolve(__dirname, "src/routes/")
+        "@routes": path.resolve(__dirname, "src/routes/"),
       },
       extensions: [".ts", ".js"],
     },
@@ -52,6 +52,9 @@ module.exports = () => {
     },
     optimization: {
       moduleIds: "deterministic",
+      splitChunks: {
+        chunks: "all",
+      },
     },
   };
 };
