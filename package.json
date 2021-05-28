@@ -10,11 +10,16 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "nodemon build/index.js --watch build",
     "prod": "nodemon dist/index.js --watch dist",
+    "build:doc": " rimraf static/apidoc && apidoc -f '.*\\.ts$' -e '(node_modules)' -o static/apidoc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "apidoc": {
+    "title": "Api Doc",
+    "url": "http://localhost:8000/v1"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",

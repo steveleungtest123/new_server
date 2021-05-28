@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookiePraser());
 
 app.use("/questions", QuestionsRoute);
+app.use("/doc", express.static("static/apidoc"))
 
 app.use("/", (req: Request, res: Response) => {
   res.status(200).json({
@@ -33,5 +34,7 @@ app.use("/", (req: Request, res: Response) => {
     message: "route not found",
   });
 });
+
+
 
 app.listen(port);
