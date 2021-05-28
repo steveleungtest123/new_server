@@ -9,6 +9,7 @@ const MongoDbClient = {
       mongoose.connect(this._db_url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useCreateIndex: true,
       });
       mongoose.Promise = global.Promise;
       this.db = mongoose.connection;

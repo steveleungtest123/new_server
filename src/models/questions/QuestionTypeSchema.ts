@@ -1,27 +1,50 @@
-import { Timestamp } from "bson";
-import { model, Schema } from "mongoose";
+import {
+  CallbackError,
+  Document,
+  HookNextFunction,
+  model,
+  Schema,
+} from "mongoose";
 
-const QuestionTypeSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: false,
-    default: "Type Description Here"
-  },
-  updated: {
-    type: Date,
-    default: Date.now
-  },
-});
-
-export interface QuestionTypeSchemaProto {
+export interface QuestionTypeSchemaProto extends Document {
   name: string;
   description?: string;
   updated: Date;
 }
 
-export default model<QuestionTypeSchemaProto>("QuestionType", QuestionTypeSchema);
+const QuestionTypeSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  description: {
+    type: String,
+    required: false,
+    default: "Type Description Here",
+  },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
+QuestionTypeSchema.pre("validate", (next: HookNextFunction) => {
+  next();
+});
+QuestionTypeSchema.on("error", () => {
+  console.log("on error??")
+})
+
+// export const errorCatchMiddleWare = (
+//   error: CallbackError,
+//   doc: QuestionTypeSchemaProto,
+//   next: Function
+// ) => {
+//   if (error?.name !== "MongoError") next(doc);
+// };
+
+export default model<QuestionTypeSchemaProto>(
+  "QuestionType",
+  QuestionTypeSchema
+);
