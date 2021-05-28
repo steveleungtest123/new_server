@@ -1,32 +1,29 @@
-import logger from '@config/logger';
-import {Db, MongoClient} from 'mongodb'
+import logger from "@config/logger";
+import mongoose, { Connection } from "mongoose";
 
 const MongoDbClient = {
-  client: null as unknown as MongoClient,
-  db: null as unknown as Db,
-  _dbUrl: process.env.mongo || "",
-  connect: async function(onSuccess?: Function, onFail?: Function) {
-    const client = new MongoClient(this._dbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
+  _db_url: process.env.mongo as string,
+  db: null as unknown as Connection,
+  connect: async function (onSuccess?: Function, onFail?: Function) {
     try {
-      const res = await client.connect()
-      this.db = res.db();
-      logger.info("db connect success")
-      if (typeof onSuccess === 'function') onSuccess(this.db);
+      mongoose.connect(this._db_url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      mongoose.Promise = global.Promise;
+      this.db = mongoose.connection;
+      this.db.on("connected", () => {
+        logger.info("db connected succeed!");
+        if (typeof onSuccess === "function") onSuccess(this.db);
+      });
+      this.db.on("error", (error: mongoose.Error) => {
+        logger.error("db connection error: " + error);
+        if (typeof onFail === "function") onFail(error);
+      });
     } catch (err) {
-      logger.error("db connect failed: " + err)
-      setTimeout(() => {
-        logger.info("db reconnecting ...")
-        this.connect(onSuccess, onFail)
-      }, 3000)
-      if (typeof onFail === 'function') onFail(err);
+      logger.error("db connection exception error: " + err);
     }
   },
-  close: function() {
-    this.client.close()
-  }
-}
+};
 
-export default MongoDbClient
+export default MongoDbClient;

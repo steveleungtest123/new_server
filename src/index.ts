@@ -2,16 +2,24 @@ import express, { Request, Response } from "express";
 import cookiePraser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
 import MongoDbClient from "@db/MongoDbClient";
-import { Db, MongoError } from "mongodb";
 import "@config/logger";
 import QuestionsRoute from "@routes/QuestionsRoute";
+import { Connection, Error } from "mongoose";
+import QuestionSchema from "./models/questions/QuestionSchema";
+import QuestionTypeSchema from "./models/questions/QuestionTypeSchema";
 
 const app = express();
 const port = 8000;
 
 MongoDbClient.connect(
-  (db: Db) => {},
-  (err: MongoError) => {}
+  async (db: Connection) => {
+    const res = await QuestionTypeSchema.create({
+      name: "checkbox",
+      description: "multiple choices"
+    })
+    console.log(res)
+  },
+  (err: Error) => {}
 );
 
 const corsOptions: CorsOptions = {
@@ -27,7 +35,7 @@ app.use(cookiePraser());
 
 app.use("/questions", QuestionsRoute);
 // app.use("/doc", express.static("static/apidoc"))
-app.use("/doc", express.static("apidoc"))
+app.use("/doc", express.static("apidoc"));
 
 app.use("/", (req: Request, res: Response) => {
   res.status(200).json({
@@ -35,7 +43,5 @@ app.use("/", (req: Request, res: Response) => {
     message: "route not found",
   });
 });
-
-
 
 app.listen(port);
