@@ -4,10 +4,6 @@ import cors, { CorsOptions } from "cors";
 import MongoDbClient from "@db/MongoDbClient";
 import "@config/logger";
 import QuestionsRoute from "@routes/QuestionsRoute";
-import { CallbackError, Connection } from "mongoose";
-import QuestionTypeSchema, {
-  QuestionTypeSchemaProto,
-} from "./models/questions/QuestionTypeSchema";
 import ExpressErrorHandler from "@middleWares/expressError";
 
 const app = express();

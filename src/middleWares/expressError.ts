@@ -5,10 +5,9 @@ const ExpressErrorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
-  console.log('in error')
   logger.warn(err.message);
+  logger.warn(JSON.stringify(req.body));
   res.status(500).json({
     code: 500,
     message: `Something broke! ${err.name}`,
